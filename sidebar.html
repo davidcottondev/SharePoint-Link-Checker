@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePoint Link Checker</title>
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ms-Grid">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-sm12">
+                <!-- Header with Settings -->
+                <div class="header">
+                    <div class="header-content">
+                        <h1 class="ms-fontSize-18 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                            SharePoint Link Checker
+                        </h1>
+                        <div class="header-buttons">
+                            <button id="refresh-btn" class="settings-button" title="Refresh Detection">
+                                🔄
+                            </button>
+                            <button id="settings-btn" class="settings-button" title="Settings">
+                                ⚙️
+                            </button>
+                        </div>
+                    </div>
+                </div>
+               
+                <div id="main-content" class="content-container">
+                    <!-- Loading state -->
+                    <div id="loading-state" class="loading-container" style="display: none;">
+                        <div class="ms-Spinner ms-Spinner--medium">
+                            <div class="ms-Spinner-circle"></div>
+                        </div>
+                        <p class="ms-fontSize-14 ms-fontColor-neutralSecondary">Checking SharePoint site...</p>
+                    </div>
+                    
+                    <!-- Not SharePoint site -->
+                    <div id="not-sharepoint" class="status-container" style="display: none;">
+                        <div class="status-icon">
+                            <i class="ms-Icon ms-Icon--Info ms-fontSize-24 ms-fontColor-neutralSecondary"></i>
+                        </div>
+                        <h3 class="ms-fontSize-16 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                            Not a SharePoint Site
+                        </h3>
+                        <p class="ms-fontSize-14 ms-fontColor-neutralSecondary">
+                            This extension works only on SharePoint sites. Please navigate to a SharePoint site to use the link checker.
+                        </p>
+                    </div>
+                    
+                    <!-- SharePoint site detected -->
+                    <div id="sharepoint-detected" class="status-container" style="display: none;">                       
+                        <!-- Site Information -->
+                        <div class="site-info-section">
+                            <div class="site-info-item">
+                                <strong>Site Title:</strong> <span id="site-title"></span>
+                            </div>
+                            <div class="site-info-item">
+                                <strong>Page Title:</strong> <span id="page-title"></span>
+                            </div>
+                            <div class="site-info-item">
+                                <strong>Page URL:</strong> <span id="page-url" class="site-url"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Link Count Section -->
+                        <div class="link-count-section">
+                            <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                                Link Count
+                            </h4>
+                            <div id="team-count-box" class="count-box">
+                                <span class="count-label">Teams:</span>
+                                <span id="team-count" class="count-value">0</span>
+                            </div>
+                            <div id="onedrive-count-box" class="count-box">
+                                <span class="count-label">OneDrive:</span>
+                                <span id="onedrive-count" class="count-value">0</span>
+                            </div>
+                            <div id="external-count-box" class="count-box">
+                                <span class="count-label">External:</span>
+                                <span id="external-count" class="count-value">0</span>
+                            </div>
+                            <div id="email-count-box" class="count-box">
+                                <span class="count-label">Email:</span>
+                                <span id="email-count" class="count-value">0</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Links Section -->
+                        <div id="team-links-section" class="links-section" style="display: none;">
+                            <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                                👥 Teams / Team Sites
+                            </h4>
+                            <div id="team-links-list" class="links-list">
+                                <!-- Team links will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- OneDrive Links Section -->
+                        <div id="onedrive-links-section" class="links-section" style="display: none;">
+                            <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                                📁 OneDrive Links
+                            </h4>
+                            <div id="onedrive-links-list" class="links-list">
+                                <!-- OneDrive links will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- External Links Section -->
+                        <div id="external-links-section" class="links-section" style="display: none;">
+                            <!-- HTTP Status Legend -->
+                            <div id="http-legend" class="http-legend" style="display: none;">
+                                <h5 class="ms-fontSize-12 ms-fontWeight-semibold ms-fontColor-neutralSecondary">
+                                    HTTP Status Legend
+                                </h5>
+                                <div class="legend-items">
+                                    <div class="legend-item">
+                                        <span class="status-dot status-success"></span>
+                                        <span class="legend-text">2xx Success</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="status-dot status-redirect"></span>
+                                        <span class="legend-text">3xx Redirect</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="status-dot status-client-error"></span>
+                                        <span class="legend-text">4xx Client Error</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="status-dot status-server-error"></span>
+                                        <span class="legend-text">5xx Server Error</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="status-dot status-network-error"></span>
+                                        <span class="legend-text">Network Error</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                                🌐 External Links
+                            </h4>
+                            <div id="external-links-list" class="links-list">
+                                <!-- External links will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Email Links Section -->
+                        <div id="email-links-section" class="links-section" style="display: none;">
+                            <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                                📧 Email Links
+                            </h4>
+                            <div id="email-links-list" class="links-list">
+                                <!-- Email links will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Results section -->
+                        <div id="results-section" class="results-container" style="display: none;">
+                            <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                                Link Check Results
+                            </h4>
+                            <div id="results-content">
+                                <!-- Results will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="sidebar.js"></script>
+</body>
+</html>

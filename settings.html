@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePoint Link Checker Settings</title>
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .settings-container {
+            padding: 20px;
+            max-width: 400px;
+        }
+        .settings-section {
+            margin-bottom: 24px;
+            padding: 16px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #edebe9;
+        }
+        .settings-group {
+            margin-bottom: 16px;
+        }
+        .settings-group:last-child {
+            margin-bottom: 0;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 4px 0;
+        }
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+        .checkbox-item input[type="checkbox"] {
+            margin: 0;
+        }
+        .checkbox-item label {
+            font-size: 14px;
+            color: #323130;
+            cursor: pointer;
+            flex: 1;
+        }
+        .status-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 4px;
+            flex-shrink: 0;
+        }
+        .sub-settings {
+            margin-left: 24px;
+            margin-top: 8px;
+            padding-left: 16px;
+            border-left: 2px solid #edebe9;
+        }
+        .sub-settings.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .save-button {
+            width: 100%;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <h2 class="ms-fontSize-20 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+            Link Checker Settings
+        </h2>
+
+        <div class="settings-section">
+            <h3 class="ms-fontSize-16 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                Link Types to Scan
+            </h3>
+            
+            <div class="settings-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="teams-enabled" checked>
+                    <label for="teams-enabled">👥 Teams / Team Sites</label>
+                </div>
+                
+                <div class="checkbox-item">
+                    <input type="checkbox" id="onedrive-enabled" checked>
+                    <label for="onedrive-enabled">📁 OneDrive Links</label>
+                </div>
+                
+                <div class="checkbox-item">
+                    <input type="checkbox" id="external-enabled" checked>
+                    <label for="external-enabled">🌐 External Links</label>
+                </div>
+                
+                <div class="checkbox-item">
+                    <input type="checkbox" id="email-enabled" checked>
+                    <label for="email-enabled">📧 Email Links (mailto)</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3 class="ms-fontSize-16 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                External Link Status Codes
+            </h3>
+            <p class="ms-fontSize-12 ms-fontColor-neutralSecondary" style="margin-bottom: 12px;">
+                Select which HTTP status codes to show for external links
+            </p>
+            
+            <div id="external-settings" class="sub-settings">
+                <div class="settings-group">
+                    <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                        Success (2xx)
+                    </h4>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="status-2xx" checked>
+                        <span class="status-color" style="background-color: #107c10;"></span>
+                        <label for="status-2xx">200 OK, 201 Created, etc.</label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                        Redirects (3xx)
+                    </h4>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="status-3xx" checked>
+                        <span class="status-color" style="background-color: #ffaa44;"></span>
+                        <label for="status-3xx">301 Moved, 302 Found, etc.</label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                        Client Errors (4xx)
+                    </h4>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="status-4xx" checked>
+                        <span class="status-color" style="background-color: #d13438;"></span>
+                        <label for="status-4xx">404 Not Found, 403 Forbidden, etc.</label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                        Server Errors (5xx)
+                    </h4>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="status-5xx" checked>
+                        <span class="status-color" style="background-color: #a4262c;"></span>
+                        <label for="status-5xx">500 Internal Error, 502 Bad Gateway, etc.</label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4 class="ms-fontSize-14 ms-fontWeight-semibold ms-fontColor-neutralPrimary">
+                        Network Errors
+                    </h4>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="status-network" checked>
+                        <span class="status-color" style="background-color: #605e5c;"></span>
+                        <label for="status-network">Timeout, Connection Failed, etc.</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="save-btn" class="ms-Button ms-Button--primary save-button" type="button">
+            <span class="ms-Button-label">💾 Save Settings & Return</span>
+        </button>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>
